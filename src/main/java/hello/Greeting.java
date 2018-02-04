@@ -6,12 +6,14 @@ public class Greeting {
 
     private final long id;
     private final String content;
+    MySqlLearn localDb = null;
 
 
 
     public Greeting(long id, String content, MySqlLearn theDb) {
         this.id = id;
         this.content = content;
+        localDb = theDb;
 
     }
 
@@ -21,6 +23,7 @@ public class Greeting {
     }
 
     public String getContent() {
-        return content;
+    String smity = localDb.readAll();
+    return smity;
     }
 }
