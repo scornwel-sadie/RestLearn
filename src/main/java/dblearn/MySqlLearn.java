@@ -57,7 +57,7 @@ public class MySqlLearn {
             }
         }
         try {
-
+            DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
             con = DriverManager.getConnection(url, user, password);
             st = con.createStatement();
             rs = st.executeQuery("SELECT VERSION()");
