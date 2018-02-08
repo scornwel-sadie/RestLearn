@@ -1,6 +1,9 @@
 package hello;
 
+import Entities.main;
 import dblearn.MySqlLearn;
+
+import java.util.List;
 
 public class Greeting {
 
@@ -22,8 +25,8 @@ public class Greeting {
         return id;
     }
 
-    public String getContent() {
-    String smity = localDb.readAll();
-    return smity;
+    public List<main> getContent() {
+    List<main> theData = localDb.readAll();
+    return theData;
     }
 }

@@ -1,9 +1,14 @@
 package dblearn;
 
+import Entities.main;
+import Entities.other;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,21 +94,70 @@ public class MySqlLearn {
         }
     }
 
-    public String readAll(){
-        String strreturn = "";
+    public List<main> readAll(){
+        String sql  = "select main.id, main.name  from main";
+
+
+        /* need to get main first and create the main class
+            then get other class for each main in the list and add to main
+         */
+
+        List<main> working = new ArrayList<main>();
+        String mainid = "";
+        String mainname = "";
+
+
         try{
-            pst = con.prepareStatement("SELECT * FROM testtable");
+
+            pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
             while( rs.next()){
-                strreturn = strreturn + rs.getString(1);
-                strreturn = strreturn + " : ";
-                strreturn = strreturn + rs.getString(2);
-                strreturn = strreturn + " ::: ";
+                main top = new main();
+                mainid =  rs.getString(1);
+                mainname  = rs.getString(2);
+                top.setName(mainname);
+                int smitty = Integer.parseInt(mainid);
+                top.setId(smitty);
+                working.add(top);
+
+
+            }
+
+            /* we now have the main no get other
+
+             */
+            sql = "select id, main_id, icecream from other where main_id = ?";
+            pst = con.prepareStatement(sql);
+            for(main person : working){
+                int index = person.getId();
+                pst.setInt(1,index);
+                rs = pst.executeQuery() ;
+                while (rs.next()){
+                   other ice = new other();
+                   mainid = rs.getString(1);
+                   String id = rs.getString(2);
+                   mainname = rs.getString(3);
+                   ice.setIcecream(mainname);
+                   ice.setId(Integer.parseInt(mainid));
+                   ice.setMain_id(Integer.parseInt(id));
+                   person.addOther(ice);
+
+                }
+
+
+
+
+                int carol = 45;
             }
 
     }catch(SQLException ex){
+
             lgr.log(Level.SEVERE, ex.getMessage(), ex);
-    }finally{
+
+    }catch(Exception smitty){
+            lgr.log(Level.SEVERE, smitty.getMessage(), smitty);
+    }
+    finally{
             try {
 
                 if (rs != null) {
@@ -122,7 +176,7 @@ public class MySqlLearn {
             }
     }
 
-    return strreturn;
+    return working;
 
     }
 
